@@ -34,7 +34,7 @@ def hash(x, max):
 # Hint: Used the LL handle collisions
 # '''
 def hash_table_insert(hash_table, key, value):
-    index = hash(key, len(hash_table.storage))
+    index = hash(key, hash_table.capacity)
 
     current_pair = hash_table.storage[index]
     last_pair = None
@@ -57,7 +57,7 @@ def hash_table_insert(hash_table, key, value):
 # If you try to remove a value that isn't there, print a warning.
 # '''
 def hash_table_remove(hash_table, key):
-    index = hash(key, len(hash_table.storage))
+    index = hash(key, hash_table.capacity)
 
     current_pair = hash_table.storage[index]
     last_pair = None
@@ -81,7 +81,7 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    index = hash(key, len(hash_table.storage))
+    index = hash(key, hash_table.capacity)
 
     current_pair = hash_table.storage[index]
 
@@ -95,7 +95,7 @@ def hash_table_retrieve(hash_table, key):
 # Fill this in
 # '''
 def hash_table_resize(hash_table):
-    new_hash_table = HashTable(2 * len(hash_table.storage))
+    new_hash_table = HashTable(2 * hash_table.capacity)
 
     current_pair = None
 
