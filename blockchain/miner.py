@@ -21,24 +21,35 @@ def proof_of_work(last_proof):
 
     start = timer()
 
-    print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
+    last_hash = hashlib.sha256(f'{last_proof}'.encode()).hexdigest()
+    new_proof = abs(last_proof * 20)
 
-    print("Proof found: " + str(proof) + " in " + str(timer() - start))
-    return proof
+    print(f'Last Proof: {last_proof}. Searching for next proof, beginning with {new_proof}...')
+
+    while not valid_proof(last_hash, new_proof):
+        if new_proof < 98:
+            print('zeroed out')
+            return 0
+        elif (timer() - start > 10):
+            print('Timer reset:', timer() - start)
+            return 0
+        new_proof -= 1
+
+    print(f'Proof found: {new_proof} in {timer() - start}')
+    return new_proof
 
 
 def valid_proof(last_hash, proof):
     """
     Validates the Proof:  Multi-ouroborus:  Do the last six characters of
-    the last hash match the first six characters of the proof?
+    the last hash match the first six characters of the new hash?
 
     IE:  last_hash: ...999123456, new hash 123456888...
     """
 
-    # TODO: Your code here!
-    pass
+    guess_hash = hashlib.sha256(f'{proof}'.encode()).hexdigest()
+
+    return last_hash[-6:] == guess_hash[:6]
 
 
 if __name__ == '__main__':
@@ -68,6 +79,9 @@ if __name__ == '__main__':
         r = requests.get(url=node + "/last_proof")
         data = r.json()
         new_proof = proof_of_work(data.get('proof'))
+
+        if not new_proof:
+            continue
 
         post_data = {"proof": new_proof,
                      "id": id}
